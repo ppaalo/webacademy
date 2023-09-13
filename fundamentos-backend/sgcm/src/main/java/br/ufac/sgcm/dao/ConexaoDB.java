@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoDB {
-    private Connection conexao;
 
-    public ConexaoDB() {
+    private Connection conexao;
+    private static ConexaoDB instanciaConexaoDB;
+
+    private ConexaoDB() {
+
         String url = "jdbc:mysql://localhost/sgcm";
         String usuario = "root";
         String senha = "root";
@@ -21,8 +24,11 @@ public class ConexaoDB {
 
     }
 
-    public Connection getConexao() {
-        return conexao;
+    public static Connection getConexao() {
+        if (instanciaConexaoDB == null) {
+            instanciaConexaoDB = new ConexaoDB();
+        }
+        return instanciaConexaoDB.conexao;
     }
-
+    
 }

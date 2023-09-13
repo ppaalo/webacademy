@@ -1,6 +1,10 @@
 package br.ufac.sgcm;
 
+import java.sql.Connection;
+import java.util.List;
+
 import br.ufac.sgcm.dao.ConexaoDB;
+import br.ufac.sgcm.dao.ProfissionalDao;
 import br.ufac.sgcm.model.Especialidade;
 import br.ufac.sgcm.model.Profissional;
 import br.ufac.sgcm.model.Unidade;
@@ -26,11 +30,17 @@ public class Main {
 
         System.out.println(profissional.getNome() + " " + profissional.getEspecialidade().getNome() + " " + profissional.getUnidade().getNome());
         
-        ConexaoDB conexao = new ConexaoDB();
-        if (conexao.getConexao() != null) {
+        Connection conexao = ConexaoDB.getConexao();
+        if (conexao != null) {
             System.out.println("Conexão Realizado com Sucesso");
         } else {
             System.out.println("Não Deu");
+        }
+
+        ProfissionalDao dao = new ProfissionalDao();
+        List<Profissional> profissionais = dao.get();
+        for(Profissional item : profissionais) {
+            System.out.println(item.getNome());
         }
 
     }
