@@ -78,8 +78,42 @@ public class ProfissionalDao implements Idao<Profissional> {
 
     @Override
     public List<Profissional> get(String termoBusca) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        List<Profissional> registros = new ArrayList<>();
+        String sql = " SELECT p.*, e.nome, u.nome FROM profissional AS p" +
+            " LEFT JOIN especialidade AS e ON p.especialidade_id = e.id" +
+            " LEFT JOIN unidade AS u ON p.unidade_id = u.id" +
+            " WHERE p.nome LIKE ?" +
+            " OR p.email LIKE ?" +
+            " OR p.registro_conselho LIKE ?" +
+            " OR p.telefone LIKE ?" +
+            " OR e.nome LIKE ?" +
+            " OR u.nome LIKE ?;";
+        try {
+            ps = conexao.prepareStatement(sql);
+            ps.setString(1, "%" + termoBusca + "%");
+            ps.setString(2, "%" + termoBusca + "%");
+            ps.setString(3, "%" + termoBusca + "%");
+            ps.setString(4, "%" + termoBusca + "%");
+            ps.setString(5, "%" + termoBusca + "%");
+            ps.setString(6, "%" + termoBusca + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Profissional registro = new Profissional();
+                registro.setId(rs.getLong("id"));
+                registro.setNome(rs.getString("nome"));
+                registro.setEmail(rs.getString("email"));
+                registro.setTelefone(rs.getString("telefone"));
+                registro.setRegistroConselho(rs.getString("registro_conselho"));
+                Especialidade e = daoEspecialidade.get(rs.getLong("especialidade_id"));
+                registro.setEspecialidade(e);
+                Unidade u = daoUnidade.get(rs.getLong("unidade_id"));
+                registro.setUnidade(u);
+                registros.add(registro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return registros;
     }
 
     @Override
@@ -123,8 +157,15 @@ public class ProfissionalDao implements Idao<Profissional> {
 
     @Override
     public int delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        int registroAfetados = 0;
+        String sql = "DELETE FROM profissional WHERE id=?";
+        try {
+            ps = conexao.prepareStatement(sql);
+            ps.setLong(1, id);
+            registroAfetados = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return registroAfetados;
     }
-
 }

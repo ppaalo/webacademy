@@ -39,16 +39,8 @@ public class Main {
 
         ProfissionalDao dao = new ProfissionalDao();
 
-        profissional.setTelefone("(68) 5555-5555");
-        profissional.setEmail("daniel@ufac.br");
-        profissional.setRegistroConselho("CRM/AC 555");
-        //dao.insert(profissional);
 
-        profissional = dao.get(6L);
-        profissional.setNome("Daniel Silva");
-        dao.update(profissional);
-/
-        List<Profissional> profissionais = dao.get();
+        List<Profissional> profissionais = dao.get("Cardio");
         for(Profissional item : profissionais) {
             System.out.println("\n");
             System.out.println(item.getNome());
