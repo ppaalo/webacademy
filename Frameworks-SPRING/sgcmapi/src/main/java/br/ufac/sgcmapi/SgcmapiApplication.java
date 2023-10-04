@@ -23,6 +23,8 @@ public class SgcmapiApplication {
 	// 	this.repo = repo;
 	// }
 
+	
+
 	@RequestMapping("/")
 	@ResponseBody
 	public String exemplo() {
