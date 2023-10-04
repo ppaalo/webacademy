@@ -2,13 +2,21 @@
 
 <%@ page import="java.util.List" %>
 <%@ page import="br.ufac.sgcm.model.Profissional" %>
+<%@ page import="br.ufac.sgcm.model.Unidade" %>
+<%@ page import="br.ufac.sgcm.model.Especialidade" %>
 
 <jsp:useBean id="controller"
     class="br.ufac.sgcm.controller.ProfissionalController"
     scope="page" />
+<jsp:useBean id="controllerE"
+    class="br.ufac.sgcm.controller.EspecialidadeController"
+    scope="page" />
+<jsp:useBean id="controllerU"
+    class="br.ufac.sgcm.controller.UnidadeController"
+    scope="page" />
 
 <%
-    List<Profissional> registros = controller.processListRequest(request);
+    controller.processFormRequest(request, response);
 %>
 
 <!DOCTYPE html>
@@ -79,17 +87,17 @@
                 <label for="especialidade">Especialidade</label>
                 <select name="especialidade" id="especialidade" required>
                     <option value=""></option>
-                    <option value="1">Especialidade 1</option>
-                    <option value="2">Especialidade 2</option>
-                    <option value="3">Especialidade 3</option>
+                    <% for (Especialidade e: controllerE.get()) { %>
+                    <option value="<%=e.getId()%>"><%=e.getNome()%></option>
+                    <% } %>
                 </select>
 
                 <label for="unidade">Unidade</label>
                 <select name="unidade" id="unidade" required>
                     <option value=""></option>
-                    <option value="1">Unidade 1</option>
-                    <option value="2">Unidade 2</option>
-                    <option value="3">Unidade 3</option>
+                    <% for (Unidade u: controllerU.get()) { %>
+                    <option value="<%=u.getId()%>"><%=u.getNome()%></option>
+                    <% } %>
                 </select>
 
                 </div>

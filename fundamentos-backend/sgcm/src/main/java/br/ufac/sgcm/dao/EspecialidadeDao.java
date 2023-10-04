@@ -8,7 +8,7 @@ import java.util.List;
 
 import br.ufac.sgcm.model.Especialidade;
 
-public class EspecialidadeDao implements Idao<Especialidade>{
+public class EspecialidadeDao implements IDao<Especialidade>{
 
     private Connection conexao;
     private PreparedStatement ps;

@@ -2,7 +2,7 @@ package br.ufac.sgcm.dao;
 
 import java.util.List;
 
-public interface Idao<T> {
+public interface IDao<T> {
     
     List<T> get();
     T get(Long id);

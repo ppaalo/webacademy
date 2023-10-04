@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufac.sgcm.dao.ProfissionalDao;
+import br.ufac.sgcm.model.Especialidade;
 import br.ufac.sgcm.model.Profissional;
+import br.ufac.sgcm.model.Unidade;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,8 +31,13 @@ public class ProfissionalController implements IController<Profissional> {
 
     @Override
     public int save(Profissional objeto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        int registrosAfetados = 0;
+        if (objeto.getId() != null) {
+            registrosAfetados = dao.update(objeto);
+        } else {
+            registrosAfetados = dao.insert(objeto);
+        }
+        return registrosAfetados;
     }
 
     @Override
@@ -55,8 +62,25 @@ public class ProfissionalController implements IController<Profissional> {
 
     @Override
     public Profissional processFormRequest(HttpServletRequest request, HttpServletResponse response) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'processFormRequest'");
+        
+        String submit = request.getParameter("submit");
+        if (submit != null) {
+            Profissional item = new Profissional();
+            item.setNome(request.getParameter("nome"));
+            item.setRegistroConselho(request.getParameter("registroConselho"));
+            item.setTelefone(request.getParameter("telefone"));
+            item.setEmail(request.getParameter("email"));
+
+            Especialidade especialidade = new Especialidade();
+            Long especialidadeId = Long.parseLong(request.getParameter("especialidade"));
+            especialidade.setId(especialidadeId);
+
+            Unidade unidade = new Unidade();
+            Long unidadeId = Long.parseLong(request.getParameter("unidade"));
+            unidade.setId(unidadeId);
+            this.save(item);
+        }
+        return new Profissional();
     }
     
 }

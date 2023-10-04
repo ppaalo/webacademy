@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import br.ufac.sgcm.model.Especialidade;
 import br.ufac.sgcm.model.Unidade;
 
-public class UnidadeDao implements Idao<Unidade>{
+public class UnidadeDao implements IDao<Unidade> {
 
     private Connection conexao;
     private PreparedStatement ps;
@@ -16,13 +18,26 @@ public class UnidadeDao implements Idao<Unidade>{
 
     public UnidadeDao() {
         conexao = ConexaoDB.getConexao();
-
     }
 
     @Override
     public List<Unidade> get() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        List<Unidade> registros = new ArrayList<>();
+        String sql = "SELECT * from unidade";
+        try {
+            ps = conexao.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Unidade registro = new Unidade();
+                registro.setId(rs.getLong("id"));
+                registro.setNome(rs.getString("nome"));
+                registro.setEndereco(rs.getString("endereco"));
+                registros.add(registro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return registros;
     }
 
     @Override

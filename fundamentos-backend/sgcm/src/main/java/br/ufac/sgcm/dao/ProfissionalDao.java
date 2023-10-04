@@ -11,7 +11,7 @@ import br.ufac.sgcm.model.Especialidade;
 import br.ufac.sgcm.model.Profissional;
 import br.ufac.sgcm.model.Unidade;
 
-public class ProfissionalDao implements Idao<Profissional> {
+public class ProfissionalDao implements IDao<Profissional> {
 
     private Connection conexao;
     private PreparedStatement ps;
@@ -28,7 +28,7 @@ public class ProfissionalDao implements Idao<Profissional> {
     @Override
     public List<Profissional> get() {
         List<Profissional> registros = new ArrayList<>();
-        String sql = "SELECT * FROM profissional;";
+        String sql = "SELECT * FROM sgcm.profissional";
         try {
             ps = conexao.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -79,7 +79,7 @@ public class ProfissionalDao implements Idao<Profissional> {
     @Override
     public List<Profissional> get(String termoBusca) {
         List<Profissional> registros = new ArrayList<>();
-        String sql = " SELECT p.*, e.nome, u.nome FROM profissional AS p" +
+        String sql = "SELECT p.*, e.nome, u.nome FROM profissional AS p" +
             " LEFT JOIN especialidade AS e ON p.especialidade_id = e.id" +
             " LEFT JOIN unidade AS u ON p.unidade_id = u.id" +
             " WHERE p.nome LIKE ?" +
@@ -119,7 +119,9 @@ public class ProfissionalDao implements Idao<Profissional> {
     @Override
     public int insert(Profissional objeto) {
         int registroAfetados = 0;
-        String sql = "INSERT INTO profissional (nome, registro_conselho, telefone, email, especialidade_id, unidade_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profissional" +
+            " (nome, registro_conselho, telefone, email, especialidade_id, unidade_id)" +
+            " VALUES (?, ?, ?, ?, ?, ?)";
         try {
             ps = conexao.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
@@ -138,7 +140,14 @@ public class ProfissionalDao implements Idao<Profissional> {
     @Override
     public int update(Profissional objeto) {
         int registroAfetados = 0;
-        String sql = "UPDATE profissional SET nome=?, registro_conselho=?, telefone=?, email=?, especialidade_id=?, unidade_id=? WHERE id=?";
+        String sql = "UPDATE profissional SET" +
+            " nome=?," +
+            " registro_conselho=?," +
+            " telefone=?," +
+            " email=?," +
+            " especialidade_id=?," +
+            " unidade_id=?" +
+            " WHERE id=?";
         try {
             ps = conexao.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
@@ -163,9 +172,10 @@ public class ProfissionalDao implements Idao<Profissional> {
             ps = conexao.prepareStatement(sql);
             ps.setLong(1, id);
             registroAfetados = ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return registroAfetados;
     }
+    
 }
