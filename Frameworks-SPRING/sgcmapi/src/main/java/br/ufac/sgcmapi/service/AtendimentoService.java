@@ -27,8 +27,7 @@ public class AtendimentoService implements IService<Atendimento> {
 
     @Override
     public List<Atendimento> get(String termoBusca) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+       return repo.busca(termoBusca);
     }
 
     @Override
@@ -41,6 +40,13 @@ public class AtendimentoService implements IService<Atendimento> {
         Atendimento registro = this.get(id);
         registro.setStatus(EStatus.CANCELADO);
         repo.save(registro);
+    }
+
+    public Atendimento updateStatus(Long id) {
+        Atendimento registro = this.get(id);
+        registro.setStatus(registro.getStatus().proximo());
+        repo.save(registro);
+        return registro;
     }
 
     
